@@ -18,7 +18,7 @@ typedef struct
 
 void createGraph (int quant, Graph *graph) 
 {
-	graph->vertex = (Vertex*)malloc(quant * sizeof(Vertex));
+	graph->vertices = (Vertex*)malloc(quant * sizeof(Vertex));
 	graph->edges = (Edge*)malloc(((quant * (quant - 1))/2) * sizeof(Edge));
 	graph->quant = quant;
 }

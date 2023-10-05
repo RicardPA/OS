@@ -17,12 +17,6 @@
 #include <string.h>
 #include <omp.h>
 
-// Valores definidos
-#define LENGTH_INSTRUCTIONS 3 
-#define LENGTH_RECORDER 6
-#define LENGTH_MEMORY 6
-#define LENGTH_BUFFER (LENGTH_RECORDER*2)
-
 /* Bibliotecas do Projeto */
 #include "Vertex.h"
 #include "Edge.h"
@@ -37,23 +31,33 @@ int main(void)
 
 	scanf("%d", &quantVertex);
 	
+
 	if (quantVertex && quantVertex > 0) 
 	{
-		createGraph(quantEdge, &graph);
+	
+		// Criar vertices
+		createGraph(quantVertex, &graph);
 		
-		createVertex(graph.edges[0].origin, 0, 10);
+		for (int i = 0; i < quantVertex - 1; i ++)
+		{
+			int value;
+
+			scanf("%d", &value);
+						
+			createVertex(&graph.vertices[i], i, value);
+		}
 		
 		for (int i = 0; i < quantEdge; i++) 
 		{
 			
 		}
-		
+
 		printGraph(&graph);
-	} 
+	}
 	else
 	{
 		printf("Erro: Valor passado é invalido.");
 	}
-	
+
 	return 0;
 }

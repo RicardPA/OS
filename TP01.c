@@ -17,15 +17,7 @@
 #include <string.h>
 #include <omp.h>
 
-// Valores definidos
-#define LENGTH_INSTRUCTIONS 3 
-#define LENGTH_RECORDER 6
-#define LENGTH_MEMORY 6
-#define LENGTH_BUFFER (LENGTH_RECORDER*2)
-
 /* Bibliotecas do Projeto */
-#include "Vertex.h"
-#include "Edge.h"
 #include "Graph.h"
 
 int main(void) 
@@ -33,20 +25,22 @@ int main(void)
 	// Denpendencias
 	Graph graph;
 	int quantVertex;
-	int quantEdge;
 
 	scanf("%d", &quantVertex);
 	
 	if (quantVertex && quantVertex > 0) 
 	{
-		createGraph(quantEdge, &graph);
+		createGraph(quantVertex, &graph);
 		
-		createVertex(graph.edges[0].origin, 0, 10);
-		
-		for (int i = 0; i < quantEdge; i++) 
+		for (int i = 0; i < quantVertex; i++)
 		{
-			
+			graph.vertices[i] = *createVertex(i, 1);
 		}
+		
+		// for (int i = 0; i < quantEdge; i++) 
+		// {
+			
+		// }
 		
 		printGraph(&graph);
 	} 

@@ -15,13 +15,6 @@ typedef struct
 	int cost;
 } Edge;
 
-void createEdge (Edge *edge, Vertex *destiny, Vertex *origin, int cost) 
-{
-	edge->destiny = destiny;
-	edge->origin = origin;
-	edge->cost = cost;
-}
-
 void printEdge (Edge *edge) 
 {
 	printf("\n|--- (Aresta) Custo: %d\n", edge->cost);
@@ -30,4 +23,12 @@ void printEdge (Edge *edge)
 	printVertex(edge->origin);
 	
 	printf("\n|--- Fim Aresta ---\n");
+}
+
+
+void createEdge (Edge *edge, Vertex *destiny, Vertex *origin, int cost) 
+{
+	edge->destiny = destiny;
+	edge->origin = origin;
+	edge->cost = cost;
 }

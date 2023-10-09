@@ -27,7 +27,6 @@ int main(void)
 	// Denpendencias
 	Graph graph;
 	int quantVertex;
-	int quantEdge;
 
 	scanf("%d", &quantVertex);
 	
@@ -40,16 +39,24 @@ int main(void)
 		
 		for (int i = 0; i < quantVertex - 1; i ++)
 		{
-			int value;
+			int demand;
 
-			scanf("%d", &value);
+			scanf("%d", &demand);
 						
-			createVertex(&graph.vertices[i], i, value);
+			createVertex(&graph.vertices[i], i, demand);
+			
+			printVertex(&graph.vertices[i]);
 		}
 		
-		for (int i = 0; i < quantEdge; i++) 
+		for (int i = 0; i < ((quantVertex * (quantVertex - 1))/2); i++) 
 		{
+			int cost;
+			int identifier_origin;
+			int identifier_destiny;
 			
+			scanf("%d %d %d", &identifier_origin, &identifier_destiny, &cost);
+			
+			createEdge(&graph.edges[i], &graph.vertices[identifier_origin], &graph.vertices[identifier_destiny], cost);
 		}
 
 		printGraph(&graph);

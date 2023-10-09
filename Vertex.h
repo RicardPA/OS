@@ -18,7 +18,7 @@ typedef struct
 void createVertex (Vertex *vertex, int identifier, int demand) 
 {
 	vertex->demand = demand;
-	vertex->demand = identifier;
+	vertex->identifier = identifier;
 }
 
 void printVertex (Vertex *vertex) 

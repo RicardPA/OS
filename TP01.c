@@ -37,15 +37,13 @@ int main(void)
 		// Criar vertices
 		createGraph(quantVertex, &graph);
 		
-		for (int i = 0; i < quantVertex - 1; i ++)
+		for (int i = 0; i < quantVertex; i ++)
 		{
 			int demand;
 
 			scanf("%d", &demand);
 						
 			createVertex(&graph.vertices[i], i, demand);
-			
-			printVertex(&graph.vertices[i]);
 		}
 		
 		for (int i = 0; i < ((quantVertex * (quantVertex - 1))/2); i++) 

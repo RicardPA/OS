@@ -25,9 +25,9 @@ void createGraph (int quant, Graph *graph)
 
 void printGraph (Graph *graph) 
 {
-	printf("\n|--- (Grafo) Quantidade de arestas: %d\n\n", graph->quant);
+	printf("\n|--- (Grafo) Quantidade de arestas: %d\n\n", ((graph->quant * (graph->quant - 1))/2));
 	
-	for (int i = 0; i < graph->quant; i++)
+	for (int i = 0; i < ((graph->quant * (graph->quant - 1))/2); i++)
 	{
 		printEdge(&graph->edges[i]);
 	}	

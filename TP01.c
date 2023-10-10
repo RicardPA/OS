@@ -19,35 +19,45 @@
 
 /* Bibliotecas do Projeto */
 #include "Graph.h"
+#include "utils.h"
 
 int main(void) 
 {
 	// Denpendencias
 	Graph graph;
-	int quantVertex;
 
-	scanf("%d", &quantVertex);
-	
-	if (quantVertex && quantVertex > 0) 
+	// Criar grafo
+	assembleGraphFile(&graph); 
+
+	// Criar menu de informações
+	int option = -1;
+	while (option != 0)
 	{
-		createGraph(quantVertex, &graph);
+		printf("\t- - - MENU - - -\n");
+		printf("0) Finalizar\n");
+		printf("1) Mostrar grafo\n");
+		printf("2) Calcular resultado\n");
+		printf("Opcao: ");
+		scanf("%d", &option);
+
+		clearScreen();
 		
-		for (int i = 0; i < quantVertex; i++)
+		switch (option)
 		{
-			graph.vertices[i] = *createVertex(i, 1);
+			case 0:
+				printf("\nFinalizando...");
+				break;
+			case 1:
+				printGraph(&graph);
+				pressToContinue();
+				clearScreen();
+				break;
+			default:
+				break;
 		}
-		
-		// for (int i = 0; i < quantEdge; i++) 
-		// {
-			
-		// }
-		
-		printGraph(&graph);
-	} 
-	else
-	{
-		printf("Erro: Valor passado é invalido.");
+
+		clearScreen();
 	}
-	
+
 	return 0;
 }

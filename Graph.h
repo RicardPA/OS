@@ -33,9 +33,9 @@ int assembleGraphFile (Graph *graph)
 	file = fopen("input.txt", "r");
 
 	if (file == NULL) {
-        printf("Erro ao abrir o arquivo.\n Verifique se o arquivo \"input.txt\" se encontra no diretório de execução.\n");
-        return 1;
-    }
+		printf("Erro ao abrir o arquivo.\n Verifique se o arquivo \"input.txt\" se encontra no diretório de execução.\n");
+		return 1;
+	}
 
 	fscanf(file, "%d", &quantVertex);
 
@@ -76,4 +76,22 @@ void printGraph (Graph *graph)
 	}	
 	
 	printf("\n|--- Fim Grafo ---\n\n");
+}
+
+void printEconomy (Graph *graph)
+{	
+	for (int i = 0; i < graph->quant; i++)
+	{
+		for (int j = 0; j < ((graph->quant * (graph->quant - 1))/2); j++)
+		{
+			if (graph->edges[j].origin->identifier == graph->vertices[i].identifier)
+			{
+				
+			} 
+			else if (graph->edges[j].destiny->identifier == graph->vertices[i].identifier)
+			{
+				
+			}
+		}
+	}
 }

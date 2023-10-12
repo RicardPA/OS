@@ -55,6 +55,8 @@ int main(void)
 			case 2:
 				printGraph(&graph);
 				pressToContinue();
+                printEconomy(&graph);
+				pressToContinue();
 				clearScreen();
 				break;
 			default:

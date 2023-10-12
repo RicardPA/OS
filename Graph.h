@@ -1,119 +1,165 @@
 /*
-	-----------------------------------
-	Graph.h
-	Author: Ricardo Portilho de Andrade 
-	-----------------------------------
-	Representação do grafo utilizado no
-	trabalho, nele temos um vetor de
-	arestas.
+        -----------------------------------
+        Graph.h
+        Author: Ricardo Portilho de Andrade
+        -----------------------------------
+        Representação do grafo utilizado no
+        trabalho, nele temos um vetor de
+        arestas.
 */
 
 #ifndef GRAPH_H
 #define GRAPH_H
 
-#include "Vertex.h"
 #include "Edge.h"
-#include <stdlib.h>
-#include <stdio.h>
+#include "Vertex.h"
 
-typedef struct 
-{
-	int quantVertex;
-	int quantEdge;
-	Edge *edges;
-	Vertex *vertices;
+#include <stddef.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+#define DISTRIBUTION_CENTER_IDENTIFIER 0
+
+typedef struct {
+    int quantVertex;
+    int quantEdge;
+    Edge *edges;
+    Vertex *vertices;
 } Graph;
 
-Graph initializeGraph (int quant) 
-{
-	Graph graph = {
-		.vertices = (Vertex*)malloc(quant * sizeof(Vertex)),
-		.edges = (Edge*)malloc(((quant * (quant - 1))/2) * sizeof(Edge)),
-		.quantVertex = quant,
-		.quantEdge = (quant * (quant - 1))/2
-	};
+Graph initializeGraph(int quant) {
+    Graph graph = {
+        .quantVertex = quant,
+        .quantEdge = (quant * (quant - 1)) / 2,
+        .edges = (Edge *)malloc(((quant * (quant - 1)) / 2) * sizeof(Edge)),
+        .vertices = (Vertex *)malloc(quant * sizeof(Vertex))
+    };
 
-	return graph;
+    return graph;
 }
 
-Graph assembleGraphFile () 
-{
-	int quantVertex = 0;
-	FILE *file;
-	Graph graph;
-	
-	file = fopen("input.txt", "r");
+Graph assembleGraphFile() {
+    int quantVertex = 0;
+    FILE *file;
+    Graph graph;
 
-	if (file == NULL) {
-		printf("Erro ao abrir o arquivo.\n Verifique se o arquivo \"input.txt\" se encontra no diretório de execução.\n");
-		return graph;
-	} 
+    file = fopen("input.txt", "r");
 
-	fscanf(file, "%d", &quantVertex);
-
-	graph = initializeGraph(quantVertex);
-
-	// Criar vertices
-	for (int i = 0; i < graph.quantVertex; i ++)
-	{
-		int demand;
-		
-		fscanf(file, "%d", &demand);
-					
-		initializeVertex(&graph.vertices[i], i, demand);
-	}
-	
-	// Criar arestas
-	for (int i = 0; i < graph.quantEdge; i++) 
-	{
-		int cost;
-		int identifier_origin;
-		int identifier_destiny;
-		
-		fscanf(file, "%d %d %d", &identifier_origin, &identifier_destiny, &cost);
-		
-		initializeEdge(&graph.edges[i], &graph.vertices[identifier_origin], &graph.vertices[identifier_destiny], cost);
-	}
-
-	fclose(file);
-
-	return graph;
-}
-
-void printGraph (Graph *graph) 
-{
-	printf("\n|--- (Grafo) Quantidade de arestas: %d\n\n", graph->quantEdge);
-	
-	for (int i = 0; i < graph->quantEdge; i++)
-	{
-		printEdge(&graph->edges[i]);
-	}	
-	
-	printf("\n|--- Fim Grafo ---\n\n");
-}
-
-void freeGraph(Graph* graph)
-{
-    if(graph != NULL)
-    {
-        free(graph->edges);
-		free(graph->vertices);
-        free(graph);
+    if (file == NULL) {
+        printf("Erro ao abrir o arquivo.\n Verifique se o arquivo \"input.txt\" se "
+               "encontra no diretório de execução.\n");
+        return graph;
     }
 
-void printEconomy (Graph *graph)
-{	
-	for (int i = 0; i < graph->quantVertex; i++)
-	{
-		for (int j = 0; j < graph->quantEdge; j++)
-		{
-			if (graph->edges[j].origin->identifier == 0)
-			{
-				
-			}
-		}
-	}
-}}
+    fscanf(file, "%d", &quantVertex);
 
+    graph = initializeGraph(quantVertex);
 
-#endif 
+    // Criar vertices
+    for (int i = 0; i < graph.quantVertex; i++) {
+        int demand;
+
+        fscanf(file, "%d", &demand);
+
+        initializeVertex(&graph.vertices[i], i, demand);
+    }
+
+    // Criar arestas
+    for (int i = 0; i < graph.quantEdge; i++) {
+        int cost;
+        int identifier_origin;
+        int identifier_destiny;
+
+        fscanf(file, "%d %d %d", &identifier_origin, &identifier_destiny, &cost);
+
+        initializeEdge(&graph.edges[i], &graph.vertices[identifier_origin],
+                       &graph.vertices[identifier_destiny], cost);
+    }
+
+    fclose(file);
+
+    return graph;
+}
+
+void printGraph(Graph *graph) {
+    printf("\n|--- (Grafo) Quantidade de arestas: %d\n\n", graph->quantEdge);
+
+    for (int i = 0; i < graph->quantEdge; i++) {
+        printEdge(&graph->edges[i]);
+    }
+
+    printf("\n|--- Fim Grafo ---\n\n");
+}
+
+void freeGraph(Graph *graph) {
+    if (graph != NULL) {
+        free(graph->edges);
+        free(graph->vertices);
+        free(graph);
+    }
+}
+
+bool isDistributionCenter(Vertex* vertex)
+{
+    return vertex->identifier == DISTRIBUTION_CENTER_IDENTIFIER;
+}
+
+bool isPathToDistributionCenter(Edge* edge)
+{
+    return (
+        isDistributionCenter(edge->origin) ||
+        isDistributionCenter(edge->destiny)
+    );
+}
+
+bool isVertexInEdge(Vertex* vertex, Edge* edge)
+{
+    return (
+        edge->origin->identifier == vertex->identifier ||
+        edge->destiny->identifier == vertex->identifier
+    );
+}
+
+int costToDistributionCenter(Vertex* vertex, Graph* graph)
+{
+    size_t currentEdgeIndex = 0;
+    Edge* currentEdge = &graph->edges[0];
+
+    while (currentEdgeIndex < graph->quantEdge && isPathToDistributionCenter(currentEdge))
+    {
+        if (isVertexInEdge(vertex, currentEdge))
+        {
+            return currentEdge->cost;
+        }
+
+        currentEdge = &graph->edges[++currentEdgeIndex];
+    }
+
+    return 0;
+}
+
+void printEconomy(Graph *graph)
+{
+    for (size_t i = 0; i < graph->quantEdge; i++)
+    {
+        Edge* edge = &graph->edges[i];
+
+        if (isPathToDistributionCenter(edge))
+        {
+            continue;
+        }
+
+        int costFromOriginToDC = costToDistributionCenter(edge->origin, graph);
+        int costFromDestinyToDC = costToDistributionCenter(edge->destiny, graph);
+        int economy = costFromOriginToDC + costFromDestinyToDC - edge->cost;
+
+        printf("\n----------Economy----------");
+        printf("\n\tFrom %d to %d:", edge->origin->identifier, edge->destiny->identifier);
+        printf("\n\tFrom %d to distribution center: cost %d", edge->origin->identifier, costFromOriginToDC);
+        printf("\n\tFrom %d to distribution center: cost %d", edge->destiny->identifier, costFromDestinyToDC);
+        printf("\n\tEconomy: %d", economy);
+        printf("\n---------------------------");
+    }
+}
+
+#endif

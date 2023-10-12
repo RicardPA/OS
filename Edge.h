@@ -8,6 +8,11 @@
 	nas contas de custo.
 */
 
+#ifndef EDGE_H
+#define EDGE_H
+
+#include <stdlib.h>
+
 typedef struct 
 {
 	Vertex *destiny;
@@ -26,9 +31,11 @@ void printEdge (Edge *edge)
 }
 
 
-void createEdge (Edge *edge, Vertex *destiny, Vertex *origin, int cost) 
+void initializeEdge (Edge *edge, Vertex *destiny, Vertex *origin, int cost) 
 {
 	edge->destiny = destiny;
 	edge->origin = origin;
 	edge->cost = cost;
 }
+
+#endif

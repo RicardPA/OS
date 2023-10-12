@@ -8,6 +8,11 @@
 	de recurso que deve ser entregue.
 */
 
+#ifndef VERTEX_H
+#define VERTEX_H
+
+#include <stdio.h>
+#include <stdlib.h>
 
 typedef struct 
 {
@@ -15,7 +20,7 @@ typedef struct
 	int demand;
 } Vertex;
 
-void createVertex (Vertex *vertex, int identifier, int demand) 
+void initializeVertex (Vertex *vertex, int identifier, int demand) 
 {
 	vertex->demand = demand;
 	vertex->identifier = identifier;
@@ -26,6 +31,8 @@ void printVertex (Vertex *vertex)
 	printf("\n| (Vertice) Identificador: %d | Demanda: %d\n", vertex->identifier, vertex->demand);
 }
 
-void destroyVertex(Vertex* vertex) {
+void freeVertex(Vertex* vertex) {
     free(vertex);
 }
+
+#endif

@@ -19,20 +19,20 @@
 
 /* Bibliotecas do Projeto */
 #include "Graph.h"
+#include "Routes.h"
 #include "utils.h"
 
 int main(void) 
 {
 	// Denpendencias
-	Graph graph;
-
-	// Criar grafo
-	assembleGraphFile(&graph); 
+	Graph graph = assembleGraphFile();
+	Routes routes;
 
 	// Criar menu de informações
 	int option = -1;
 	while (option != 0)
 	{
+		clearScreen();
 		printf("\t- - - MENU - - -\n");
 		printf("0) Finalizar\n");
 		printf("1) Mostrar grafo\n");
@@ -52,12 +52,19 @@ int main(void)
 				pressToContinue();
 				clearScreen();
 				break;
+			case 2:
+				printGraph(&graph);
+				pressToContinue();
+				clearScreen();
+				break;
 			default:
 				break;
 		}
-
-		clearScreen();
 	}
 
+	freeRoutes(&routes);
+	freeGraph(&graph);
+	clearScreen();
+	
 	return 0;
 }

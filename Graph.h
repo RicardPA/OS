@@ -8,51 +8,63 @@
 	arestas.
 */
 
+#ifndef GRAPH_H
+#define GRAPH_H
+
 #include "Vertex.h"
 #include "Edge.h"
+#include <stdlib.h>
+#include <stdio.h>
 
 typedef struct 
 {
-	int quant;
+	int quantVertex;
+	int quantEdge;
 	Edge *edges;
 	Vertex *vertices;
 } Graph;
 
-void createGraph (int quant, Graph *graph) 
+Graph initializeGraph (int quant) 
 {
-	graph->vertices = (Vertex*)malloc(quant * sizeof(Vertex));
-	graph->edges = (Edge*)malloc(((quant * (quant - 1))/2) * sizeof(Edge));
-	graph->quant = quant;
+	Graph graph = {
+		.vertices = (Vertex*)malloc(quant * sizeof(Vertex)),
+		.edges = (Edge*)malloc(((quant * (quant - 1))/2) * sizeof(Edge)),
+		.quantVertex = quant,
+		.quantEdge = (quant * (quant - 1))/2
+	};
+
+	return graph;
 }
 
-int assembleGraphFile (Graph *graph) 
+Graph assembleGraphFile () 
 {
 	int quantVertex = 0;
 	FILE *file;
+	Graph graph;
 	
 	file = fopen("input.txt", "r");
 
 	if (file == NULL) {
 		printf("Erro ao abrir o arquivo.\n Verifique se o arquivo \"input.txt\" se encontra no diretório de execução.\n");
-		return 1;
-	}
+		return graph;
+	} 
 
 	fscanf(file, "%d", &quantVertex);
 
-	createGraph(quantVertex, graph);
+	graph = initializeGraph(quantVertex);
 
 	// Criar vertices
-	for (int i = 0; i < graph->quant; i ++)
+	for (int i = 0; i < graph.quantVertex; i ++)
 	{
 		int demand;
 		
 		fscanf(file, "%d", &demand);
 					
-		createVertex(&graph->vertices[i], i, demand);
+		initializeVertex(&graph.vertices[i], i, demand);
 	}
 	
 	// Criar arestas
-	for (int i = 0; i < ((graph->quant * (graph->quant - 1))/2); i++) 
+	for (int i = 0; i < graph.quantEdge; i++) 
 	{
 		int cost;
 		int identifier_origin;
@@ -60,17 +72,19 @@ int assembleGraphFile (Graph *graph)
 		
 		fscanf(file, "%d %d %d", &identifier_origin, &identifier_destiny, &cost);
 		
-		createEdge(&graph->edges[i], &graph->vertices[identifier_origin], &graph->vertices[identifier_destiny], cost);
+		initializeEdge(&graph.edges[i], &graph.vertices[identifier_origin], &graph.vertices[identifier_destiny], cost);
 	}
 
 	fclose(file);
+
+	return graph;
 }
 
 void printGraph (Graph *graph) 
 {
-	printf("\n|--- (Grafo) Quantidade de arestas: %d\n\n", ((graph->quant * (graph->quant - 1))/2));
+	printf("\n|--- (Grafo) Quantidade de arestas: %d\n\n", graph->quantEdge);
 	
-	for (int i = 0; i < ((graph->quant * (graph->quant - 1))/2); i++)
+	for (int i = 0; i < graph->quantEdge; i++)
 	{
 		printEdge(&graph->edges[i]);
 	}	
@@ -78,20 +92,28 @@ void printGraph (Graph *graph)
 	printf("\n|--- Fim Grafo ---\n\n");
 }
 
+void freeGraph(Graph* graph)
+{
+    if(graph != NULL)
+    {
+        free(graph->edges);
+		free(graph->vertices);
+        free(graph);
+    }
+
 void printEconomy (Graph *graph)
 {	
-	for (int i = 0; i < graph->quant; i++)
+	for (int i = 0; i < graph->quantVertex; i++)
 	{
-		for (int j = 0; j < ((graph->quant * (graph->quant - 1))/2); j++)
+		for (int j = 0; j < graph->quantEdge; j++)
 		{
-			if (graph->edges[j].origin->identifier == graph->vertices[i].identifier)
-			{
-				
-			} 
-			else if (graph->edges[j].destiny->identifier == graph->vertices[i].identifier)
+			if (graph->edges[j].origin->identifier == 0)
 			{
 				
 			}
 		}
 	}
-}
+}}
+
+
+#endif 

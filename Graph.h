@@ -13,6 +13,7 @@
 
 #include "Edge.h"
 #include "Vertex.h"
+#include "Routes.h"
 
 #include <stddef.h>
 #include <stdio.h>
@@ -31,8 +32,8 @@ Graph initializeGraph(int quant) {
     Graph graph = {
         .quantVertex = quant,
         .quantEdge = (quant * (quant - 1)) / 2,
-        .edges = (Edge *)malloc(((quant * (quant - 1)) / 2) * sizeof(Edge)),
-        .vertices = (Vertex *)malloc(quant * sizeof(Vertex))
+        .edges = (Edge *)calloc(((quant * (quant - 1)) / 2), sizeof(Edge)),
+        .vertices = (Vertex *)calloc(quant, sizeof(Vertex))
     };
 
     return graph;
@@ -138,8 +139,10 @@ int costToDistributionCenter(Vertex* vertex, Graph* graph)
     return 0;
 }
 
-void printEconomy(Graph *graph)
+void getRoutesEconomy(Graph *graph, Routes *routes)
 {
+	Routes *routesTemp = routes;
+
     for (size_t i = 0; i < graph->quantEdge; i++)
     {
         Edge* edge = &graph->edges[i];
@@ -153,12 +156,17 @@ void printEconomy(Graph *graph)
         int costFromDestinyToDC = costToDistributionCenter(edge->destiny, graph);
         int economy = costFromOriginToDC + costFromDestinyToDC - edge->cost;
 
-        printf("\n----------Economy----------");
-        printf("\n\tFrom %d to %d:", edge->origin->identifier, edge->destiny->identifier);
-        printf("\n\tFrom %d to distribution center: cost %d", edge->origin->identifier, costFromOriginToDC);
-        printf("\n\tFrom %d to distribution center: cost %d", edge->destiny->identifier, costFromDestinyToDC);
-        printf("\n\tEconomy: %d", economy);
-        printf("\n---------------------------");
+		routesTemp->economy = economy;
+		routesTemp->demand = edge->origin->demand + edge->destiny->demand;
+		routesTemp->identifiers[0] = edge->origin->identifier;
+		routesTemp->identifiers[1] = edge->destiny->identifier;
+
+		if ((i + 1) < graph->quantEdge) {
+			if (routesTemp->nextRoute == NULL) {  
+				routesTemp->nextRoute = initializeRoutes();
+				routesTemp = routesTemp->nextRoute;
+			}
+		}
     }
 }
 

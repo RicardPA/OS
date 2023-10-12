@@ -25,8 +25,11 @@
 int main(void) 
 {
 	// Denpendencias
+	int charge = 40;
 	Graph graph = assembleGraphFile();
-	Routes routes;
+	Routes *routes;
+
+	routes = initializeRoutes();
 
 	// Criar menu de informações
 	int option = -1;
@@ -53,9 +56,10 @@ int main(void)
 				clearScreen();
 				break;
 			case 2:
-				printGraph(&graph);
-				pressToContinue();
-                printEconomy(&graph);
+				getRoutesEconomy(&graph, routes);
+				sortRoutes(routes);
+				printf("proximo");
+				printRoutes(routes);
 				pressToContinue();
 				clearScreen();
 				break;
@@ -64,7 +68,7 @@ int main(void)
 		}
 	}
 
-	freeRoutes(&routes);
+	freeRoutes(routes);
 	freeGraph(&graph);
 	clearScreen();
 	

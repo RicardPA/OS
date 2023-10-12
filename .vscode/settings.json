@@ -1,6 +1,8 @@
 {
     "files.associations": {
         "stdlib.h": "c",
-        "edge.h": "c"
+        "edge.h": "c",
+        "vertex.h": "c",
+        "routes.h": "c"
     }
 }

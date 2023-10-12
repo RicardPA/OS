@@ -13,6 +13,8 @@
 
 #include <stdlib.h>
 
+#include "Vertex.h"
+
 typedef struct 
 {
 	Vertex *destiny;

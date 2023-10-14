@@ -13,13 +13,10 @@
 
 #include "Edge.h"
 #include "Vertex.h"
-#include "Routes.h"
 
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
-
-#define DISTRIBUTION_CENTER_IDENTIFIER 0
 
 typedef struct {
     int quantVertex;
@@ -97,76 +94,6 @@ void freeGraph(Graph *graph) {
         free(graph->edges);
         free(graph->vertices);
         free(graph);
-    }
-}
-
-bool isDistributionCenter(Vertex* vertex)
-{
-    return vertex->identifier == DISTRIBUTION_CENTER_IDENTIFIER;
-}
-
-bool isPathToDistributionCenter(Edge* edge)
-{
-    return (
-        isDistributionCenter(edge->origin) ||
-        isDistributionCenter(edge->destiny)
-    );
-}
-
-bool isVertexInEdge(Vertex* vertex, Edge* edge)
-{
-    return (
-        edge->origin->identifier == vertex->identifier ||
-        edge->destiny->identifier == vertex->identifier
-    );
-}
-
-int costToDistributionCenter(Vertex* vertex, Graph* graph)
-{
-    size_t currentEdgeIndex = 0;
-    Edge* currentEdge = &graph->edges[0];
-
-    while (currentEdgeIndex < graph->quantEdge && isPathToDistributionCenter(currentEdge))
-    {
-        if (isVertexInEdge(vertex, currentEdge))
-        {
-            return currentEdge->cost;
-        }
-
-        currentEdge = &graph->edges[++currentEdgeIndex];
-    }
-
-    return 0;
-}
-
-void getRoutesEconomy(Graph *graph, Routes *routes)
-{
-	Routes *routesTemp = routes;
-
-    for (size_t i = 0; i < graph->quantEdge; i++)
-    {
-        Edge* edge = &graph->edges[i];
-
-        if (isPathToDistributionCenter(edge))
-        {
-            continue;
-        }
-
-        int costFromOriginToDC = costToDistributionCenter(edge->origin, graph);
-        int costFromDestinyToDC = costToDistributionCenter(edge->destiny, graph);
-        int economy = costFromOriginToDC + costFromDestinyToDC - edge->cost;
-
-		routesTemp->economy = economy;
-		routesTemp->demand = edge->origin->demand + edge->destiny->demand;
-		routesTemp->identifiers[0] = edge->origin->identifier;
-		routesTemp->identifiers[1] = edge->destiny->identifier;
-
-		if ((i + 1) < graph->quantEdge) {
-			if (routesTemp->nextRoute == NULL) {  
-				routesTemp->nextRoute = initializeRoutes();
-				routesTemp = routesTemp->nextRoute;
-			}
-		}
     }
 }
 
